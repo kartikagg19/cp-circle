@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String        @unique
+  email        String?       @unique
+  role         Role          @default(BROKER)
+  isVerified   Boolean       @default(false)
+  rera_number  String?
+  areas        String[]
+  whatsapp     String?
+  avatar       String?
+  bio          String?
+  listings     Listing[]
+  requirements Requirement[]
+  leads        Lead[]        @relation("LeadContacter")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum Role {
+  BROKER
+  BUYER
+  ADMIN
+}
+
+model Listing {
+  id           String       @id @default(cuid())
+  broker       User         @relation(fields: [brokerId], references: [id])
+  brokerId     String
+  type         ListingType
+  propertyType PropertyType
+  bhk          Int?
+  title        String
+  description  String?
+  price        BigInt
+  area_sqft    Int?
+  locality     String
+  subLocality  String?
+  pincode      String
+  latitude     Float?
+  longitude    Float?
+  images       String[]
+  amenities    String[]
+  furnishing   Furnishing?
+  floor        Int?
+  totalFloors  Int?
+  possession   String?
+  isActive     Boolean      @default(true)
+  isFeatured   Boolean      @default(false)
+  views        Int          @default(0)
+  leads        Lead[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+enum ListingType {
+  SALE
+  RENT
+}
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+}
+
+enum Furnishing {
+  FURNISHED
+  SEMI_FURNISHED
+  UNFURNISHED
+}
+
+model Requirement {
+  id        String      @id @default(cuid())
+  postedBy  User        @relation(fields: [userId], references: [id])
+  userId    String
+  bhk       Int[]
+  type      ListingType
+  locality  String[]
+  budgetMin BigInt
+  budgetMax BigInt
+  notes     String?
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  listingId   String
+  contacter   User?    @relation("LeadContacter", fields: [contacterId], references: [id])
+  contacterId String?
+  name        String
+  phone       String
+  message     String?
+  createdAt   DateTime @default(now())
+}
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  phone     String
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

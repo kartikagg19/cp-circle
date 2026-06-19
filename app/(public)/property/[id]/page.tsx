@@ -12,6 +12,10 @@ import {
   Home, Calendar, Phone, Share2, Eye, Tag
 } from "lucide-react";
 
+// Render per-request so listing detail is always fresh and the build does not
+// query the database (no DATABASE_URL at build time).
+export const dynamic = "force-dynamic";
+
 async function getListing(id: string) {
   try {
     const listing = await prisma.listing.findUnique({

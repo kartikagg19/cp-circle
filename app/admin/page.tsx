@@ -6,6 +6,9 @@ import { formatPrice, timeAgo } from "@/lib/utils";
 import Link from "next/link";
 import { Users, Building2, MessageSquare, TrendingUp, CheckCircle2, XCircle, Shield } from "lucide-react";
 
+// Render per-request (admin data is live and auth-gated; never prerender at build).
+export const dynamic = "force-dynamic";
+
 async function getAdminData() {
   try {
     const [totalBrokers, totalListings, totalLeads, unverifiedBrokers, recentListings] = await Promise.all([

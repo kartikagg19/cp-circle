@@ -7,13 +7,14 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL;
-
-  if (!connectionString) {
-    // Return a client that throws a helpful error on first use (not at import time)
-    // This allows the app to build without DATABASE_URL
-    return new PrismaClient() as any;
-  }
+  // Prisma 7 with driver adapters requires an adapter at construction time —
+  // `new PrismaClient()` with no options throws. During build (e.g. Next.js
+  // "collecting page data") DATABASE_URL may be missing, so fall back to a
+  // placeholder string. The pg Pool connects lazily, so this only errors if a
+  // query actually runs without a real DATABASE_URL — never at construction/build.
+  const connectionString =
+    process.env.DATABASE_URL ??
+    "postgresql://placeholder:placeholder@localhost:5432/placeholder";
 
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);

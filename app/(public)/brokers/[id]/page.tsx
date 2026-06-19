@@ -7,6 +7,10 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CheckCircle2, MapPin, Phone, Building2, Calendar } from "lucide-react";
 import { timeAgo } from "@/lib/utils";
 
+// Render per-request so broker profiles are always fresh and the build does not
+// query the database (no DATABASE_URL at build time).
+export const dynamic = "force-dynamic";
+
 async function getBroker(id: string) {
   try {
     return await prisma.user.findUnique({

@@ -9,6 +9,10 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+// Render per-request so search results reflect live data and the build does not
+// query the database (no DATABASE_URL at build time).
+export const dynamic = "force-dynamic";
+
 const PAGE_SIZE = 20;
 
 interface SearchPageProps {

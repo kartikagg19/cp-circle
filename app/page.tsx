@@ -7,6 +7,10 @@ import { prisma } from "@/lib/prisma";
 import { LOCALITY_ZONES } from "@/constants/mumbai-areas";
 import { Building2, Users, MapPin, ArrowRight, TrendingUp, Shield, Zap } from "lucide-react";
 
+// Render per-request so live listing data is always fresh and the build does
+// not query the database (no DATABASE_URL at build time).
+export const dynamic = "force-dynamic";
+
 async function getFeaturedListings() {
   try {
     return await prisma.listing.findMany({

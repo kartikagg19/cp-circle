@@ -5,6 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { MUMBAI_LOCALITIES } from "@/constants/mumbai-areas";
 import { Search, Users } from "lucide-react";
 
+// Render per-request so broker data is always fresh and the build does not
+// query the database (no DATABASE_URL at build time).
+export const dynamic = "force-dynamic";
+
 interface BrokersPageProps {
   searchParams: Promise<{ q?: string; area?: string; page?: string }>;
 }

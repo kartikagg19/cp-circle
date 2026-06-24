@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "scrape": "npx tsx prisma/scrape99acres.ts",
     "seed": "npx tsx prisma/seed.ts",
+    "seed-photos": "npx tsx prisma/seed-photos.ts",
     "cleanup": "npx tsx prisma/cleanup.ts"
   },
   "dependencies": {
